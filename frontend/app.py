@@ -12,10 +12,10 @@ def get_ask_endpoint_url() -> str:
     # Check if running on Streamlit Community Cloud (where secrets are set)
     if "BACKEND_URL" in st.secrets:
         backend_url = st.secrets["BACKEND_URL"]
-        st.log(f"Using backend URL from Streamlit secrets: {backend_url}")
+        print(f"Using backend URL from Streamlit secrets: {backend_url}")
     else:
         # Fallback for local development
-        st.log("Loading backend URL from local config.toml")
+        print("Loading backend URL from local config.toml")
         try:
             # Assumes your streamlit app is run from the 'howie' project root
             with open("config.toml", "rb") as f:
