@@ -1,6 +1,6 @@
 # Howie AI Assistant
 
-**Live Demo:** [Link to Streamlit App]
+**Live Demo:** [Like to running app](https://howie-ai-assistant.streamlit.app/) 
 
 **Author:** Steven Feinstein | [Dev Site](https://srf.dev/) | [LinkedIn profile](https://www.linkedin.com/in/srfeinstein/)
 
