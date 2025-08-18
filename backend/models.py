@@ -1,4 +1,20 @@
-# in backend/models.py
+# Copyright © 2025 SRF Development, Inc. All rights reserved.
+#
+# This file is part of the "Howie AI Assistant" project.
+#
+# This project is free software: you can redistribute it and/or modify
+# it under the terms of the MIT License as published by the Open Source
+# Initiative.
+#
+# This project is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# MIT License for more details.
+#
+# You should have received a copy of the MIT License along with this project.
+# If not, see <https://opensource.org/licenses/MIT>.
+#
+# SPDX-License-Identifier: MIT
 from pydantic import BaseModel
 from typing import List, Dict, Any
 from core.vertex_ai_service import VertexTextEmbedding
