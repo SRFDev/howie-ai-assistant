@@ -617,6 +617,41 @@ class VertexAIService:
         self._vs_endpoint = None
         logger.info("--- Resource reset complete ---")
 
+    def sleep(self):
+        logger.info("--- 💤 PUTTING HOWIE TO SLEEP (Undeploying Index) ---")
+    
+        try:
+            # 1. Find existing resources (don't create new ones)
+            index = self._find_index(self.config.vs_index_name)
+
+            # 2. Undeploy
+            if len(index.deployed_indexes) > 0:
+                index_endpoint = index.deployed_indexes[0].index_endpoint
+                endpoint = aiplatform.MatchingEngineIndexEndpoint(index_endpoint)
+                endpoint.undeploy_index(deployed_index_id=self.config.vs_index_name)
+            
+                logger.info("--- ✅ Howie is ASLEEP. Hourly compute costs stopped. ---")
+
+        except Exception as e:
+            logger.error(f"Failed to put Howie to sleep: {e}", exc_info=True)
+        
+
+    def wake(self):
+        logger.info("--- WAKING UP HOWIE (Deploying Vertex AI Endpoint) ---")
+        
+        try:
+            # Provision & Deploy
+            # This checks if index exists, checks endpoint, and DEPLOYS.
+            self.provision_vertex_resources() 
+            
+            # Specifically ensure deployment is active (in case provision skips it)
+            self.deploy_index_to_endpoint() 
+
+            logger.info("--- ✅ Howie is AWAKE. Costs are accruing. ---")
+
+        except Exception as e:
+            logger.error(f"Failed to wake up Howie: {e}", exc_info=True)
+            
 
 if __name__ == "__main__":
 

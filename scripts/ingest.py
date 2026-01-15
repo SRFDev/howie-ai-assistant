@@ -220,7 +220,7 @@ def parse_data(config: AppConfig):
     unstructured_pdf_docs = loader.load_data(file=config.pdf_src_path)
 
     # Get the text chunks from the PDF documents
-    parser = SentenceSplitter(chunk_size=256, chunk_overlap=20)
+    parser = SentenceSplitter(chunk_size=config.chunk_size, chunk_overlap=config.chunk_overlap)
     text_chunks = parser.split_text(unstructured_pdf_docs[0].get_content())
     # text_chunks = parser.get_nodes_from_documents(unstructured_pdf_docs)
 
