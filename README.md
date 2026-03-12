@@ -76,7 +76,12 @@ To set up and run this project in your own GCP environment, please follow these 
     ```
     *   Open `config.toml` and replace all placeholder values (e.g., `YOUR_GCP_PROJECT_ID`) with your own.
 
-5.  **Run the Ingestion Pipeline:**
+5. **Upload the Sample Data to Cloud Storage:**
+   This project includes a sample PDF and video tutorial in the `/data` directory. Gemini requires these to be in a GCS bucket for multimodal processing. Run the built-in upload command:
+   ```bash
+   python -m scripts.ingest --upload
+
+6.  **Run the Ingestion Pipeline:**
     *   This will provision cloud resources and ingest the data. This may take 20-60 minutes on the first run.
     ```bash
     python -m scripts.ingest
@@ -86,7 +91,7 @@ To set up and run this project in your own GCP environment, please follow these 
     python -m scripts.ingest --reset
     ```
 
-6.  **Run the Services:**
+7.  **Run the Services:**
     *   **Backend (in one terminal):**
         ```bash
         uvicorn backend.main:app --reload

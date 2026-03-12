@@ -285,11 +285,7 @@ class VertexAIService:
         self.vs_endpoint = self.create_endpoint(
             endpoint_name=self.config.vs_index_endpoint_name
         )
-        self.vs_deployed_index = self.deploy_index_to_endpoint(
-            vs_index=self._vs_index,
-            vs_endpoint=self.vs_endpoint,
-            index_name=self.config.vs_index_deployment_name,
-        )
+        self.vs_deployed_index = self.deploy_index_to_endpoint()
 
     def ingest_nodes(self, nodes: list[Document]):
         """
