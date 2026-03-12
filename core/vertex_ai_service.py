@@ -145,45 +145,46 @@ class VertexAIService:
 
         return vs_endpoint
 
-    def deploy_index_to_endpoint(
-        self,
-        vs_index: aiplatform.MatchingEngineIndex,
-        vs_endpoint: aiplatform.MatchingEngineIndexEndpoint,
-        index_name: str,
-    ) -> aiplatform.MatchingEngineIndexEndpoint:
+    def deploy_index_to_endpoint(self) -> aiplatform.MatchingEngineIndexEndpoint:
         """
-        Deploys a Vector Search endpoint.
+        Deploys a Vector Search index to the endpoint.
         """
-        # check if endpoint exists
-        index_endpoints = [
+        # Safety check to ensure we have the necessary objects loaded
+        if not self._vs_index or not self.vs_endpoint:
+            raise RuntimeError("Index and Endpoint must be provisioned before deploying.")
+
+        # Check if endpoint already has an index deployed
+        index_endpoints =[
             (deployed_index.index_endpoint, deployed_index.deployed_index_id)
-            for deployed_index in vs_index.deployed_indexes
+            for deployed_index in self._vs_index.deployed_indexes
         ]
 
         if len(index_endpoints) == 0:
             logger.info(
-                f"Deploying Vector Search index {vs_index.display_name} at endpoint {vs_endpoint.display_name} ..."
+                f"Deploying Vector Search index {self._vs_index.display_name} at endpoint {self.vs_endpoint.display_name} ..."
             )
-            vs_deployed_index = vs_endpoint.deploy_index(
-                index=vs_index,
-                deployed_index_id=index_name,
-                display_name=index_name,
+            self.vs_deployed_index = self.vs_endpoint.deploy_index(
+                index=self._vs_index,
+                # Use the correct deployment name from config!
+                deployed_index_id=self.config.vs_index_deployment_name, 
+                display_name=self.config.vs_index_deployment_name,
                 machine_type="e2-standard-16",
                 min_replica_count=1,
                 max_replica_count=1,
             )
             logger.info(
-                f"Vector Search index {vs_index.display_name} is deployed at endpoint {vs_deployed_index.display_name}"
+                f"Vector Search index {self._vs_index.display_name} is deployed at endpoint {self.vs_deployed_index.display_name}"
             )
         else:
-            vs_deployed_index = aiplatform.MatchingEngineIndexEndpoint(
+            self.vs_deployed_index = aiplatform.MatchingEngineIndexEndpoint(
                 index_endpoint_name=index_endpoints[0][0]
             )
             logger.info(
-                f"Vector Search index {vs_index.display_name} is already deployed at endpoint {vs_deployed_index.display_name}"
+                f"Vector Search index {self._vs_index.display_name} is already deployed."
             )
 
-        return vs_deployed_index
+        return self.vs_deployed_index
+
 
     def _find_index(self, display_name) -> aiplatform.MatchingEngineIndex:
         """
@@ -287,7 +288,7 @@ class VertexAIService:
         self.vs_deployed_index = self.deploy_index_to_endpoint(
             vs_index=self._vs_index,
             vs_endpoint=self.vs_endpoint,
-            index_name=self.config.vs_index_name,
+            index_name=self.config.vs_index_deployment_name,
         )
 
     def ingest_nodes(self, nodes: list[Document]):
@@ -435,7 +436,7 @@ class VertexAIService:
 
         # Undeploy the index from the endpoint
         logger.info(f" Undeploying index from endpoint '{endpoint_id}'...")
-        self.vs_endpoint.undeploy_index(deployed_index_id=self.config.vs_index_name)
+        self.vs_endpoint.undeploy_index(deployed_index_id=self.config.vs_index_deployment_name)
 
     def delete_index(self):
         index_id = self._vs_index.resource_name
