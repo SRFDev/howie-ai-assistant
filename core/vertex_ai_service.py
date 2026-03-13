@@ -625,7 +625,7 @@ class VertexAIService:
             if len(index.deployed_indexes) > 0:
                 index_endpoint = index.deployed_indexes[0].index_endpoint
                 endpoint = aiplatform.MatchingEngineIndexEndpoint(index_endpoint)
-                endpoint.undeploy_index(deployed_index_id=self.config.vs_index_name)
+                endpoint.undeploy_index(deployed_index_id=self.config.vs_index_deployment_name)
             
                 logger.info("--- ✅ Howie is ASLEEP. Hourly compute costs stopped. ---")
 
