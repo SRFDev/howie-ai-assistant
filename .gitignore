@@ -198,3 +198,6 @@ cython_debug/
 
 # Ignore the local configuration file with real secrets/IDs
 config.toml
+
+# Ignore Streamlit configuration directory with real secrets/IDs
+.streamlit/
